@@ -1,10 +1,23 @@
 import * as THREE from "three";
+import Experience from "../Experience";
+import Resources from "../Utils/Resources";
 
 export default class Floor {
-  constructor(experience) {
-    this.experience = experience
-    this.scene = experience.scene
-    this.resources = experience.resources
+  // Class
+  experience: Experience
+  scene: THREE.Scene
+  resources: Resources
+
+  // Mesh
+  geometry: THREE.CircleGeometry | any
+  textures: { [key:string]: any } = {}
+  material: THREE.MeshStandardMaterial | any
+  mesh: THREE.Mesh | any
+
+  constructor() {
+    this.experience = Experience.Instance()
+    this.scene = this.experience.scene
+    this.resources = this.experience.resources
 
     this.setGeometry()
     this.setTexture()
@@ -12,13 +25,13 @@ export default class Floor {
     this.setMesh()
   }
 
-  setGeometry() {
+  private setGeometry(): void 
+  {
     this.geometry = new THREE.CircleGeometry(5, 64)
   }
 
-  setTexture() {
-    this.textures = {}
-
+  private setTexture() 
+  {
     this.textures.color = this.resources.items.grassColorTexture
     this.textures.color.encoding = THREE.sRGBEncoding
     this.textures.color.repeat.set(1.5, 1.5);
@@ -29,17 +42,18 @@ export default class Floor {
     this.textures.normal.repeat.set(1.5, 1.5);
     this.textures.normal.wrapS = THREE.RepeatWrapping;
     this.textures.normal.wrapT = THREE.RepeatWrapping;
-
   }
 
-  setMaterial() {
+  private setMaterial() 
+  {
     this.material = new THREE.MeshStandardMaterial({
       map: this.textures.color,
       normalMap: this.textures.normal
     })
   }
 
-  setMesh() {
+  private setMesh() 
+  {
     this.mesh = new THREE.Mesh(this.geometry, this.material)
     this.mesh.rotation.x = -Math.PI * 0.5
     this.mesh.receiveShadow = true
