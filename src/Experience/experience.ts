@@ -34,9 +34,6 @@ export default class Experience {
   constructor(canvas: HTMLCanvasElement) {
     Experience._instance = this
      
-    // Global access
-    window.experience = this
-
     this.debug = new Debug()
     this.canvas = canvas
     this.sizes = new Sizes()
@@ -55,12 +52,12 @@ export default class Experience {
 
   }
 
-  resize(): void {
+  private resize(): void {
     this.camera.resize()
     this.renderer.resize()
   }
 
-  update(): void {
+  private update(): void {
     this.raycaster.update()
     this.camera.update()
     this.world.update()
