@@ -1,4 +1,7 @@
 export const sources = [
+  /**
+   * Cube textures
+   */
   {
     name: "environmentMapTexture",
     type: "cubeTexture",
@@ -11,6 +14,9 @@ export const sources = [
       "textures/environmentMap/nz.jpg",
     ]
   },
+  /**
+   * Textures
+   */
   {
     name: "kekColorTexture",
     type: "texture",
@@ -46,36 +52,30 @@ export const sources = [
     type: "texture",
     path: "textures/matcaps/3.png"
   },
+  /**
+   * GLTF models
+   */
   {
     name: "foxModel",
     type: "gltfModel",
     path: "models/Fox/glTF/Fox.gltf"
   },
   {
-    name: "chestModel",
-    type: "gltfModel",
-    path: "models/Chest/glTF/Chest.gltf"
-  },
-  {
     name: "singleChestModel",
     type: "gltfModel",
     path: "models/Chest/glTF/SingleChest.gltf"
   },
+  /**
+   * Sounds
+   */
   {
-    name: "chestOpenSound",
+    name: "clickSound",
     type: "sound",
-    path: "sounds/chest/openning-chest.mp3"
+    path: "sounds/click.mp3"
   },
-  {
-    name: "chestCloseSound",
-    type: "sound",
-    path: "sounds/chest/closing-chest.mp3"
-  },
-  {
-    name: "chestOpenLockedSound",
-    type: "sound",
-    path: "sounds/chest/openning-locked-chest.mp3"
-  },
+  /**
+   * Fonts
+   */
   {
     name: "minecraft",
     type: "font",
