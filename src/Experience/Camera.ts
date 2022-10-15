@@ -27,8 +27,8 @@ export default class Camera {
   positionDebugFolder: GUI | any
   targetDebugFolder: GUI | any
 
-  constructor(experience: Experience) {
-    this.experience = experience
+  constructor() {
+    this.experience = Experience.Instance()
     this.debug = this.experience.debug
     this.sizes = this.experience.sizes 
     this.scene = this.experience.scene 
