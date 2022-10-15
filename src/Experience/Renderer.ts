@@ -12,8 +12,8 @@ export default class Renderer {
   scene: THREE.Scene
   camera: Camera
 
-  constructor(experience: Experience) {
-    this.experience = experience
+  constructor() {
+    this.experience = Experience.Instance()
     this.canvas = this.experience.canvas
     this.sizes = this.experience.sizes
     this.scene = this.experience.scene
