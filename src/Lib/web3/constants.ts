@@ -1,4 +1,4 @@
-export const networks: {[key: string]: any} = {
+export const NETWORKS: {[key: number]: string} = {
   1: "ethereum",
   10: "optimism",
   56: "binance smart chain",
