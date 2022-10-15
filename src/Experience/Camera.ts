@@ -39,6 +39,8 @@ export default class Camera {
     this.setCamAngles()
     this.setTransitions()
 
+    this.camAngle.default()
+
     if(this.debug.active)
     {
       this.debugFolder.add(this.controls, 'enablePan')
@@ -74,9 +76,8 @@ export default class Camera {
     this.controls.enablePan = false
     this.controls.rotateSpeed = 1.2
     this.controls.zoomSpeed = 0.8
-    this.controls.target.z = -1
-    this.controls.enableRotate = false
-    this.controls.enableZoom = false
+    this.controls.enableRotate = true
+    this.controls.enableZoom = true
   }
 
   setCamAngles(): void
@@ -98,8 +99,8 @@ export default class Camera {
       this.controls.maxDistance = 16
       this.controls.minAzimuthAngle = 0 
       this.controls.maxAzimuthAngle = Math.PI * 1.9999
-      this.controls.minPolarAngle = Math.PI * 0.2
-      this.controls.maxPolarAngle = Math.PI * 0.55
+      this.controls.minPolarAngle = 0
+      this.controls.maxPolarAngle = Math.PI * 0.499 
       this.cam = false
     }
   }
@@ -127,13 +128,6 @@ export default class Camera {
     }
   }
 
-  setOrbitControls(): void {
-    let controls = new OrbitControls(this.instance, this.canvas)
-    controls.enableDamping = true
-
-    this.controls = controls
-  }
-
   sleep(ms: number): Promise<unknown> {
     return new Promise(resolve => setTimeout(resolve, ms));
   }
@@ -144,6 +138,7 @@ export default class Camera {
   }
 
   update(): void {
+    // this.controls.target = 0
     this.controls.update()
   }
 }
