@@ -53,7 +53,7 @@ export default class Raycaster {
     })
   }
 
-  click() 
+  click(): void
   {
     this.raycaster?.setFromCamera(this.mouse.coor, this.camera.instance)
   }

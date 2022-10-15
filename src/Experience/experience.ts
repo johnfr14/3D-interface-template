@@ -38,7 +38,7 @@ export default class Experience {
     this.canvas = canvas
     this.sizes = new Sizes()
     this.time = new Time()
-    this.mouse = new Mouse(this)
+    this.mouse = new Mouse()
 
     // Set up the scene in canvas (loading page)
     this.scene = new THREE.Scene()
@@ -46,7 +46,7 @@ export default class Experience {
     this.preLoader = new PreLoader()
     this.factory = new Factory()
     this.camera = new Camera()
-    this.renderer = new Renderer(this)
+    this.renderer = new Renderer()
 
     // Set up the world with all the models & how we will interact with them
     this.world = new World()
@@ -63,7 +63,6 @@ export default class Experience {
   }
 
   private update(): void {
-    this.raycaster.update()
     this.camera.update()
     this.world.update()
     this.renderer.update()
