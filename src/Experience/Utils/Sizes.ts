@@ -1,6 +1,10 @@
 import EventEmitter from "./EventEmitter";
 
 export default class Sizes extends EventEmitter {
+  width: number
+  height: number
+  pixelRatio: number
+  
   constructor() {
     super()
 
@@ -17,5 +21,4 @@ export default class Sizes extends EventEmitter {
       this.trigger("resize")
     })
   }
-
 }
