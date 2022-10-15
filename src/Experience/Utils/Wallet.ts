@@ -1,4 +1,5 @@
 import * as THREE from "three";
+import * as web3D from "../../Lib/web3";
 import Experience from "../Experience";
 import Factory from "./Factory";
 import { ethers } from "ethers";
@@ -19,9 +20,10 @@ export default class Wallet {
   
   ethereum: any
   provider: Web3Provider
+  signer?: any
   isConnected = false
   network = ''
-  mesh: { [key: string]: THREE.Mesh } = {}
+  mesh: { [key: string]: THREE.Mesh<THREE.BufferGeometry, THREE.Material> } = {}
 
   constructor(user: User) {
     this.experience = Experience.Instance()
@@ -51,8 +53,44 @@ export default class Wallet {
     this.scene.add(this.mesh["connect"])
   }
 
-  public connect(): void {}
-  public disconnect(): void {}
+  public async connect(): Promise<void> 
+  {
+    try 
+    {
+      // Get signer
+      await this.ethereum.request({ method: 'eth_requestAccounts' });
+      console.log("selected address: ", this.ethereum.selectedAddress)
+      this.provider = new ethers.providers.Web3Provider(this.ethereum);
+      this.signer = await this.provider.getSigner()
+      this.isConnected = true
+      
+      // Set up network
+      this.network = web3D.constants.NETWORKS[this.ethereum.networkVersion] // get the name of network
+      if (this.mesh[this.network] === undefined)
+      {
+        this.mesh[this.network] = this.factory.createTextMesh(this.network, "purple")
+      }
+      this.mesh[this.network].scale.set(0.5, 0.5, 0.5)
+      this.mesh[this.network].position.copy(this.mesh["connect"].position)
+      this.mesh[this.network].rotation.copy(this.mesh["connect"].rotation)
+      this.mesh[this.network].position.y -= 0.5
+      console.log("network: ", this.network)
+      
+      // Switch meshes
+      this.scene.remove(this.mesh.connect)
+      this.scene.add(this.mesh[this.network])
+      this.scene.add(this.mesh.connected)
+    }
+    catch (error: any) { console.error(error.message) }
+  }
+
+  public disconnect(): void 
+  {
+    this.isConnected = false
+    this.scene.remove(this.mesh.connected)
+    this.scene.remove(this.mesh[this.network])
+    this.scene.add(this.mesh.connect)
+  }
 
   public update(): void {}
 }
