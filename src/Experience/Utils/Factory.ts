@@ -13,7 +13,7 @@ export default class Factory {
     this.resources = this.experience.resources
   }
 
-  public createTextMesh(text: string, color?: string, obj?: TextGeometryParameters): THREE.Mesh
+  public createTextMesh(text: string, color?: string, obj?: TextGeometryParameters): THREE.Mesh<THREE.BufferGeometry, THREE.Material>
   {
     const textGeometry = new TextGeometry(
       text, 
