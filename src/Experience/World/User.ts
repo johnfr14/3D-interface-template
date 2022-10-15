@@ -5,7 +5,7 @@ import Experience from "../Experience";
 import Debug from "../Utils/Debug";
 import Resources from "../Utils/Resources";
 import Time from "../Utils/Time";
-import { Wallet } from "ethers";
+import Wallet from "../Utils/Wallet";
 
 export default class User {
   // Class
@@ -14,7 +14,7 @@ export default class User {
   resources: Resources
   time: Time
   debug: Debug
-  wallet?: Wallet
+  wallet: Wallet
 
   // Model
   fox: { [key: string]: any } = {}
@@ -25,6 +25,7 @@ export default class User {
   constructor() 
   {
     this.experience = Experience.Instance()
+    this.wallet = new Wallet(this)
     this.scene = this.experience.scene
     this.resources = this.experience.resources
     this.time = this.experience.time
