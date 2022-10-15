@@ -3,9 +3,7 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App';
 import { Web3ReactProvider } from '@web3-react/core';
-import { getLibrary } from './Lib/Utils';
-import { GeneralProvider } from "./Provider/GeneralProvider";
-import { ContractProvider } from "./Provider/ContractProvider";
+import { getLibrary } from './Lib/web3';
 
 
 const root = ReactDOM.createRoot(
@@ -14,11 +12,7 @@ const root = ReactDOM.createRoot(
 root.render(
   <>
     <Web3ReactProvider getLibrary={getLibrary}>
-      <GeneralProvider>
-        <ContractProvider>
           <App />
-        </ContractProvider>
-      </GeneralProvider>
     </Web3ReactProvider>
   </>
 );
