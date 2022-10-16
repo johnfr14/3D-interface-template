@@ -1,27 +1,24 @@
+import * as THREE from "three";
 import EventEmitter from "./EventEmitter";
 
 export default class Time extends EventEmitter {
-  start: number
-  current: number
-  elapsed: number
-  delta: number
+  clock: THREE.Clock
+  oldTime: number = 0
+  elapsedTime: number = 0
+  deltaTime: number = 16
 
   constructor() {
     super()
 
-    this.start = Date.now()
-    this.current = this.start
-    this.elapsed = 0
-    this.delta = 16
+    this.clock = new THREE.Clock()
 
     window.requestAnimationFrame(() => this.tick())
   }
 
   private tick() {
-    const currentTime = Date.now()
-    this.delta = currentTime - this.current
-    this.current = currentTime;
-    this.elapsed = this.current - this.start
+    this.elapsedTime = this.clock.getElapsedTime()
+    this.deltaTime = this.elapsedTime - this.oldTime
+    this.oldTime = this.elapsedTime;
 
     this.trigger('tick') 
 
