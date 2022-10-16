@@ -1,4 +1,5 @@
 import * as THREE from "three";
+import { Howl } from 'howler'
 import EventEmitter from "./EventEmitter";
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { FontLoader } from "three/examples/jsm/loaders/FontLoader.js";
@@ -67,15 +68,12 @@ export default class Resources extends EventEmitter {
       if (source.type === "font")
         this.loaders.fontLoader.load(source.path, (file: unknown) => this.sourcesLoaded(source, file))
       if (source.type === "sound")
-        this.loaders.audioLoader.load(source.path, (file: any) => this.audioLoad(source, file))
+        this.loaders.audioLoader.load(source.path, () => this.audioLoad(source))
     }
   }
 
-  audioLoad(source: Sources, file: AudioBuffer) {
-    const sound = new THREE.Audio( this.loaders.listener );
-    if (source.name === "chestCloseSound") sound.offset = 1.2
-    sound.setBuffer( file );
-    sound.setVolume( 0.5 );
+  audioLoad(source: Sources) {
+    const sound = new Howl({ src: [source.path] });
     this.sourcesLoaded(source, sound)
   }
 
