@@ -5,6 +5,7 @@ import Experience from './Experience';
 import Debug from './Utils/Debug';
 import Sizes from './Utils/Sizes';
 import GUI from 'lil-gui';
+import User from "./World/User";
 
 export default class Camera {
   // Classes
@@ -12,6 +13,7 @@ export default class Camera {
   debug: Debug
   sizes: Sizes
   scene: THREE.Scene
+  user?: User
   canvas: HTMLCanvasElement
 
   // States of Camera
