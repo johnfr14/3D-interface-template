@@ -8,6 +8,11 @@ import Time from "../Utils/Time";
 import Wallet from "../Utils/Wallet";
 import Camera from "../Camera";
 
+const UP = ["ArrowUp", 'w', 'W']
+const DOWN = ["ArrowDown", 's', 'S']
+const LEFT = ["ArrowLeft", 'a', 'A']
+const RIGHT = ["ArrowRight", 'd', 'D']
+
 export default class User {
   // Class
   experience: Experience
@@ -76,10 +81,9 @@ export default class User {
     this.scene.add(this.fox.scene)
 
     this.fox.scene.traverse((child: any) => {
-      if (child instanceof THREE.Mesh) { child.castShadow = true }
+      if (child instanceof THREE.Mesh) { child.castShadow = true; child.receiveShadow = true }
     })
     this.camera.controls.target = this.fox.scene.position
-    console.log(this.camera)
   }
 
   private setAnimations(): void 
@@ -98,11 +102,12 @@ export default class User {
 
   private setActions(): void 
   {
+    // Player is moving
     window.addEventListener("keydown", (event) => 
     {
-      switch (event.key) {
         // Run
-        case "ArrowUp":
+        if (UP.includes(event.key)) 
+        {
           this.isMoving = true
           this.movements["ArrowUp"] = true
           this.movements["ArrowDown"] = false
@@ -110,20 +115,22 @@ export default class User {
           this.fox.animation.action.current = this.fox.animation.action.run
           this.fox.animation.action.current.play()
           this.fox.animation.action.walk.stop()
-          break
+        }
 
         // Walk
-        case "ArrowDown":
+        if (DOWN.includes(event.key)) 
+        {
           this.isMoving = true
           this.movements["ArrowDown"] = true
           this.movements["ArrowUp"] = false
           this.movementType = "walk"
           this.fox.animation.action.current = this.fox.animation.action.walk
           this.fox.animation.action.current.play()
-          break
+        }
 
         // Rotate left
-        case "ArrowLeft":
+        if (LEFT.includes(event.key)) 
+        {
           this.movements["ArrowLeft"] = true
           if (!this.isMoving) 
           { 
@@ -131,10 +138,11 @@ export default class User {
             this.fox.animation.action.current = this.fox.animation.action.walk
             this.fox.animation.action.current.play() 
           }
-          break
+        }
 
         // Rotate right
-        case "ArrowRight":
+        if (RIGHT.includes(event.key))
+        {
           this.movements["ArrowRight"] = true
           if (!this.isMoving) 
           { 
@@ -142,18 +150,17 @@ export default class User {
             this.fox.animation.action.current = this.fox.animation.action.walk
             this.fox.animation.action.current.play()  
           }
-          break
-        default:
-          console.error("Error while moving")
-      }
-      
-    })
+        }
+    }) 
 
+    // Player stop moving
     window.addEventListener("keyup", (event) => 
     {
-      if (event.key === "ArrowUp" || event.key === "ArrowDown")
+      this.camera.controls.maxPolarAngle = Math.PI * 0.5
+
+      if (UP.includes(event.key) || DOWN.includes(event.key))
       {
-        this.movements[event.key] = false
+        UP.includes(event.key) ? this.movements["ArrowUp"] = false : this.movements["ArrowDown"] = false
         this.isMoving = false
         this.movementType = "idle"
         this.fox.animation.action.current = this.fox.animation.action.idle
@@ -161,9 +168,9 @@ export default class User {
         this.fox.animation.action.walk.stop()
       }
 
-      if (event.key === "ArrowLeft" || event.key === "ArrowRight")
+      if (LEFT.includes(event.key) || RIGHT.includes(event.key))
       {
-        this.movements[event.key] = false
+        LEFT.includes(event.key) ? this.movements["ArrowLeft"] = false : this.movements["ArrowRight"] = false
         if (!this.isMoving) 
         { 
           this.movementType = "idle"
@@ -184,18 +191,20 @@ export default class User {
     {
       this.fox.scene.position.z += (this.time.deltaTime * direction.z) * 9
       this.fox.scene.position.x += (this.time.deltaTime * direction.x) * 9
-      this.camera.instance.position.y = 20
-      this.camera.instance.position.z = -10
+      this.camera.controls.maxPolarAngle = Math.PI * 0.4
     }
+
     if (this.movements.ArrowDown)
     {
       this.fox.scene.position.z -= (this.time.deltaTime * direction.z) * 3
       this.fox.scene.position.x -= (this.time.deltaTime * direction.x) * 3
     }
+
     if (this.movements.ArrowLeft)
     {
       this.fox.scene.rotation.y += this.time.deltaTime * 3
     }
+
     if (this.movements.ArrowRight)
     {
       this.fox.scene.rotation.y -= this.time.deltaTime * 3
