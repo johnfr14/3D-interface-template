@@ -32,7 +32,9 @@ export default class Factory {
     textGeometry.center()
     const textMaterial = new THREE.MeshMatcapMaterial({ color: color || "white" })
     // textMaterial.wireframe = true
-    return new THREE.Mesh(textGeometry, textMaterial)
+    const mesh = new THREE.Mesh(textGeometry, textMaterial)
+    mesh.castShadow = true
+    return mesh
   }
 
   public createSmartContractMesh() {}
