@@ -24,6 +24,7 @@ export default class User {
   wallet: Wallet
 
   // Model
+  pointing: boolean = false
   fox: { [key: string]: any } = {}
   isMoving: boolean = false
   movements: { [key: string]: boolean } = {
@@ -34,6 +35,8 @@ export default class User {
   }
   movementType: string = "idle"
   movementMultiplier: { [key: string]: number } = {"idle": 1, "walk": 1, "run": 3}
+  _currentPosition = new Vector3()
+  _currentLookat = new Vector3()
 
   // Debug
   debugFolder: GUI | undefined
@@ -72,6 +75,9 @@ export default class User {
       this.rotationDebugFolder.add(this.fox.scene.rotation, 'y').min(0).max(Math.PI * 2).step(0.1)
       this.rotationDebugFolder.add(this.fox.scene.rotation, 'z').min(0).max(Math.PI * 2).step(0.1)
     }
+
+    window.addEventListener("pointerdown", (event) => this.pointing = true)
+    window.addEventListener("pointerup", (event) => this.pointing = false)
   }
 
   private setGLTF(): void 
@@ -211,8 +217,52 @@ export default class User {
     }
   }
 
+  _CalculateIdealOffset() {
+    const idealOffset = new THREE.Vector3(0, 5, -9);
+    idealOffset.applyQuaternion(this.fox.scene.quaternion);
+    idealOffset.add(this.fox.scene.position);
+    return idealOffset;
+  }
+
+  _CalculateIdealLookat() {
+    const idealLookat = new THREE.Vector3(0, 0, 20);
+    idealLookat.applyQuaternion(this.fox.scene.quaternion);
+    idealLookat.add(this.fox.scene.position);
+    return idealLookat;
+  }
+
+  _CalculateIdealLookatPointing() {
+    const idealLookat = new THREE.Vector3(0, 2, 0);
+    idealLookat.applyQuaternion(this.fox.scene.quaternion);
+    idealLookat.add(this.fox.scene.position);
+    return idealLookat;
+  }
+
   public update(): void 
   {
+    if (this.isMoving) {
+      const idealOffset = this._CalculateIdealOffset();
+      const idealLookat = this._CalculateIdealLookat();
+      
+      const t = 0.05 - Math.pow(0.001, this.time.elapsedTime);
+      
+      this._currentPosition.lerp(idealOffset, t);
+      this._currentLookat.lerp(idealLookat, t);
+      
+      this.camera.instance.position.copy(this._currentPosition);
+      this.camera.controls.update()
+    }
+
+    if (this.pointing) {
+      const idealLookat = this._CalculateIdealLookatPointing();
+      
+      const t = 0.05 - Math.pow(0.001, this.time.elapsedTime);
+      
+      this._currentLookat.lerp(idealLookat, t);
+      this.camera.instance.lookAt(this._currentLookat);
+    }
+    
+    this.camera.instance.lookAt(this._currentLookat);
     this.move()
     this.fox.animation.mixer.update(this.time.deltaTime * this.movementMultiplier[this.movementType])
   }
