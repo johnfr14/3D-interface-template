@@ -21,6 +21,9 @@ export default class World {
     this.scene = this.experience.scene;
     this.resources = this.experience.resources;
 
+    const gridHelper = new THREE.GridHelper(100, 100);
+    this.scene.add(gridHelper);
+
 
     this.resources.on("ready", () => {
       this.floor = new Floor();
