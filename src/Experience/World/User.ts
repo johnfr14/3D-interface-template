@@ -240,7 +240,7 @@ export default class User {
 
   public update(): void 
   {
-    if (this.isMoving) {
+    if (this.isMoving && !this.pointing) {
       const idealOffset = this._CalculateIdealOffset();
       const idealLookat = this._CalculateIdealLookat();
       
